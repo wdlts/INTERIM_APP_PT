@@ -3,6 +3,7 @@ import time
 from datetime import datetime
 import io
 import idgeneration
+from searchid import idsearchdelete
 
 csv.register_dialect('РАЗДЕЛИТЕЛЬ', delimiter=';', skipinitialspace=True)
 filecontent = []
@@ -39,6 +40,7 @@ def mainProg():
                     with open('notes.csv', 'a') as csvfile:
                         writer = csv.writer(csvfile, dialect='РАЗДЕЛИТЕЛЬ', skipinitialspace=True)
                         writer.writerow(("id" + str(idgeneration.newid()), noteHeader, noteContent, str(current_datetime)))
+                    csvfile.close()
                     print("Заметка успешно сохранена")
                     print(notes)
                     mainProg()
@@ -56,6 +58,7 @@ def mainProg():
                     with io.open('notes.csv', encoding='utf-8') as file:
                         for line in file:
                             print(line, end='')
+                        file.close()
                 else:
                     counter = 0
                     with io.open('notes.csv', encoding='utf-8') as file:
@@ -63,9 +66,24 @@ def mainProg():
                             if TTS in line:
                                 print(line, end='')
                                 counter += 1
+                        file.close()
                     if counter == 0:
                         print("Такой заметки нет\n")
-        elif command == "3":
+                    file.close()
+        # elif command == "3":
+
+
+        elif command == "4":
+            while True:
+                print("Введите id заметки, которую нужно удалить:\n"
+                      "0 - выйти в главное меню\n")
+                idtodelete = input()
+                if idtodelete.isdigit():
+                    idsearchdelete(idtodelete)
+                if idtodelete == "0":
+                    mainProg()
+
+
 
 
 

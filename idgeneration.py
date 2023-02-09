@@ -8,6 +8,7 @@ def newid():
             filecontent.append(line)
     lastitem = filecontent[-2]
     lastitemid = int(lastitem.split(';')[0].split('id')[1])
+    file.close()
     return lastitemid+1
 
 
