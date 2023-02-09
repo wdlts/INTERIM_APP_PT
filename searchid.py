@@ -4,15 +4,6 @@ import os
 
 
 def idsearchdelete(inputid):
-    # f = open('notes.csv', 'w')
-    # for line in f:
-    #     if "id" + str(inputid) + ";" not in line:
-    #         with io.open('new_notes.csv', 'a') as file1:
-    #             file1.writelines(line)
-    # f.close()
-    # file1.close()
-    # os.remove('notes.csv')
-    # os.rename('new_notes.csv', 'notes.csv')
 
     INFILE = "notes.csv"
     FIND = "id" + str(inputid) + ";"

@@ -78,10 +78,22 @@ def mainProg():
                 print("Введите id заметки, которую нужно удалить:\n"
                       "0 - выйти в главное меню\n")
                 idtodelete = input()
-                if idtodelete.isdigit():
+                counter = 0
+                with io.open('notes.csv', encoding='utf-8') as file:
+                    for line in file:
+                        if idtodelete in line:
+                            counter += 1
+                    file.close()
+                if counter == 0:
+                    print("Такого id нет, попробуйте еще раз\n"
+                          "\n")
+                elif idtodelete.isdigit():
                     idsearchdelete(idtodelete)
-                if idtodelete == "0":
+                    print("Заметка с id "+idtodelete+" удалена\n")
+                elif idtodelete == "0":
                     mainProg()
+                else:
+                    print("Неверный id, попробуйте еще раз")
 
 
 
