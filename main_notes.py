@@ -1,5 +1,4 @@
 import csv
-import time
 from datetime import datetime
 import io
 import idgeneration
@@ -11,7 +10,9 @@ csv.register_dialect('РАЗДЕЛИТЕЛЬ', delimiter=';', skipinitialspace=T
 filecontent = []
 notes = []
 current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-myFile = open('notes.csv', 'a', encoding='utf-8')
+
+
+# myFile = open('notes.csv', 'a', encoding='utf-8')
 
 
 def mainMenu():
@@ -26,8 +27,14 @@ def mainProg():
     mainMenu()
 
     while True:
-        command = input("Выберите команду: ")
-
+        command = str(input("Выберите команду: "))
+        try:
+            if int(command) < 1 or int(command) > 5:
+                print("Неверная команда, только цифры от 1 до 5")
+                mainProg()
+        except ValueError:
+            print("Буквы недопустимы, повторите попытку")
+            mainProg()
         if command == "1":
             while True:
                 noteHeader = input("Введите заголовок заметки или 0 для выхода в главное меню: ")
@@ -44,7 +51,8 @@ def mainProg():
                             mainProg()
                         else:
                             notes.append(str(
-                                idgeneration.newid()) + ';' + noteHeader + ';' + noteContent + ';' + str(current_datetime))
+                                idgeneration.newid()) + ';' + noteHeader + ';' + noteContent + ';' + str(
+                                current_datetime))
                             with open('notes.csv', 'a', encoding="utf-8") as csvfile:
                                 csvfile.write("\n" + str(
                                     idgeneration.newid()) + ";" +
@@ -53,15 +61,19 @@ def mainProg():
                                               str(current_datetime))
                                 csvfile.close()
                             sortids()
-
                             print("Заметка успешно сохранена")
-                            print(notes)
+                            print((str(notes)
+                                   .split(";"))[0] + " | " + (str(notes)
+                                                              .split(";"))[1] + " | " + (str(notes)
+                                                                                         .split(";"))[2] + " | " +
+                                  (str(notes)
+                                   .split(";"))[3])
                             mainProg()
         elif command == "2":
             while True:
                 print("\nВведите текст для поиска по всем заметкам или:\n"
-                      "all - вывести все записи\n"
-                      "0 - выйти в главное меню\n")
+                      "all - вывести все заметки\n"
+                      "0 - вернуться в главное меню\n")
                 TTS = input()
                 if TTS == "0":
                     mainProg()
@@ -108,7 +120,8 @@ def mainProg():
                     newbody = input("Введите новый текст заметки: \n")
                     idsearchdelete(idtoedit)
                     with open('notes.csv', 'a', encoding="utf-8") as csvfile:
-                        csvfile.write("\n"+idtoedit + ";" + newheader + ";" + newbody + ";" + str(current_datetime)+"\n")
+                        csvfile.write(
+                            "\n" + idtoedit + ";" + newheader + ";" + newbody + ";" + str(current_datetime) + "\n")
                         print("Заметка " + idtoedit + " ## " + newheader + " ## " + newbody + " ## " + str(
                             current_datetime) + " отредактирована")
                     csvfile.close()
@@ -129,7 +142,7 @@ def mainProg():
                             counter += 1
                     file.close()
                 if counter == 0:
-                    print("Такого id нет или id неверный, попробуйте еще раз\n"
+                    print("Такого id нет или id указан неправильно, попробуйте еще раз\n"
                           "\n")
                 elif idtodelete.isdigit() and idtodelete != 0:
                     idsearchdelete(idtodelete)
