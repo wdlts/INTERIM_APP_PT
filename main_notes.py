@@ -10,7 +10,7 @@ from sortstrings import sortids
 csv.register_dialect('РАЗДЕЛИТЕЛЬ', delimiter=';', skipinitialspace=True)
 filecontent = []
 notes = []
-current_datetime = datetime.now()
+current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 myFile = open('notes.csv', 'a', encoding='utf-8')
 
 
@@ -27,29 +27,36 @@ def mainProg():
 
     while True:
         command = input("Выберите команду: ")
+
         if command == "1":
-            noteHeader = input("Введите заголовок заметки или 0 для выхода в главное меню: ")
-            if noteHeader == "0":
-                mainProg()
-            else:
-                noteContent = input("Введите тело заметки или 0 для выхода в главное меню: ")
-                if noteContent == "0":
+            while True:
+                noteHeader = input("Введите заголовок заметки или 0 для выхода в главное меню: ")
+                if ";" in noteHeader:
+                    print("Символ ; не допускается попробуйте еще раз")
+                elif noteHeader == "0":
                     mainProg()
                 else:
-                    notes.append(str(
-                        idgeneration.newid()) + ';' + noteHeader + ';' + noteContent + ';' + str(current_datetime))
-                    with open('notes.csv', 'a', encoding="utf-8") as csvfile:
-                        csvfile.write("\n" + str(
-                            idgeneration.newid()) + ";" +
-                                      noteHeader + ";" +
-                                      noteContent + ";" +
-                                      str(current_datetime))
-                        csvfile.close()
-                    sortids()
+                    while True:
+                        noteContent = input("Введите тело заметки или 0 для выхода в главное меню: ")
+                        if ";" in noteContent:
+                            print("Символ ; не допускается попробуйте еще раз")
+                        elif noteContent == "0":
+                            mainProg()
+                        else:
+                            notes.append(str(
+                                idgeneration.newid()) + ';' + noteHeader + ';' + noteContent + ';' + str(current_datetime))
+                            with open('notes.csv', 'a', encoding="utf-8") as csvfile:
+                                csvfile.write("\n" + str(
+                                    idgeneration.newid()) + ";" +
+                                              noteHeader + ";" +
+                                              noteContent + ";" +
+                                              str(current_datetime))
+                                csvfile.close()
+                            sortids()
 
-                    print("Заметка успешно сохранена")
-                    print(notes)
-                    mainProg()
+                            print("Заметка успешно сохранена")
+                            print(notes)
+                            mainProg()
         elif command == "2":
             while True:
                 print("\nВведите текст для поиска по всем заметкам или:\n"
