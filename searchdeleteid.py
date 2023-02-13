@@ -6,12 +6,12 @@ import os
 def idsearchdelete(inputid):
 
     INFILE = "notes.csv"
-    FIND = "id" + str(inputid) + ";"
+    FIND = inputid
     OUTFILE = "new_notes.csv"
     ENC = "utf-8"
     with open(INFILE, 'r', encoding=ENC) as infile, open(OUTFILE, "w", encoding=ENC) as outfile:
         for line in infile:
-            if FIND not in line:
+            if FIND != line.split(';')[0]:
                 outfile.write(line)
     infile.close()
     outfile.close()
