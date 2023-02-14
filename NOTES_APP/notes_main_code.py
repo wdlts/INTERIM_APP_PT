@@ -1,7 +1,6 @@
 import csv
 import io
 from datetime import datetime
-
 from NOTES_APP.FUNCTIONS import idgeneration
 from NOTES_APP.FUNCTIONS.findprintid import findid
 from NOTES_APP.FUNCTIONS.idsearchedit import idsearchheader, idsearchbody
@@ -117,7 +116,7 @@ def mainProg():
                     file.close()
                 if counter == 0:
                     print("Такого id нет или он введен неправильно, попробуйте еще раз\n")
-                elif idtoedit.isdigit() and idtoedit != 0:
+                elif counter > 0:
                     print("Следующая заметка будет отредактирована:\n")
                     findid(idtoedit)
                     newheader = input("Введите новый заголовок или не"

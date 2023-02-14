@@ -14,7 +14,3 @@ def newid():
         lastitemid = int(lastitem.split(';')[0])
         file.close()
         return lastitemid+1
-
-
-
-

@@ -19,5 +19,4 @@ def idsearchdelete(inputid):
             infile.write(line)
     infile.close()
     outfile.close()
-
     os.remove(OUTFILE)
