@@ -3,7 +3,7 @@ import io
 from datetime import datetime
 from NOTES_APP.FUNCTIONS import idgeneration
 from NOTES_APP.FUNCTIONS.findprintid import findid
-from NOTES_APP.FUNCTIONS.idsearchedit import idsearchheader, idsearchbody
+from NOTES_APP.FUNCTIONS.idsearchedit import idsearchheader, idsearchbody, idsearchprintall
 from NOTES_APP.FUNCTIONS.searchdeleteid import idsearchdelete
 from NOTES_APP.FUNCTIONS.sortstrings import sortids
 
@@ -11,6 +11,7 @@ csv.register_dialect('РАЗДЕЛИТЕЛЬ', delimiter=';', skipinitialspace=T
 filecontent = []
 notes = []
 current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+
 
 def mainMenu():
     print("1. Создать заметку\n"
@@ -62,12 +63,14 @@ def mainProg():
                             print((str(notes).split(";"))[0]
                                   + " | " + (str(notes).split(";"))[1]
                                   + " | " + (str(notes).split(";"))[2]
-                                  + " | " + (str(notes).split(";"))[3]+"\n")
+                                  + " | " + (str(notes).split(";"))[3] + "\n")
                             mainProg()
         elif command == "2":
             while True:
                 print("\nВведите текст для поиска по всем заметкам или:\n"
                       "all - вывести все заметки\n"
+                      "date - искать по дате\n"
+                      "id - искать по id\n"
                       "0 - вернуться в главное меню\n")
                 texttosearchorcommand = input()
                 if texttosearchorcommand == "0":
@@ -83,10 +86,41 @@ def mainProg():
                             with io.open('CSV/notes.csv', 'r', encoding='utf-8') as file:
                                 for line in file:
                                     print((line.split(";"))[0]
+                                          + " | " + (line.split(";"))[1]
+                                          + " | " + (line.split(";"))[2]
+                                          + " | " + (line.split(";"))[3])
+                                file.close()
+                elif texttosearchorcommand == "date":
+                    date = input("Введите дату в формате дд-мм-гггг: \n")
+
+                    with io.open('CSV/notes.csv', encoding='utf-8') as file:
+                        counter = 0
+                        for line in file:
+                            if date in line:
+                                counter += 1
+                        if counter == 0:
+                            print("Заметок с такой датой нет или дата введена неправильно")
+                            file.close()
+                        else:
+                            with io.open('CSV/notes.csv', 'r', encoding='utf-8') as file:
+                                for line in file:
+                                    if date in str(line):
+                                        print((line.split(";"))[0]
                                               + " | " + (line.split(";"))[1]
                                               + " | " + (line.split(";"))[2]
                                               + " | " + (line.split(";"))[3])
                                 file.close()
+                elif texttosearchorcommand == "id":
+                    id = input("Введите id для поиска заметки:\n")
+                    with io.open('CSV/notes.csv', encoding='utf-8') as file:
+                        counter = 0
+                        for line in file:
+                            if id == line.split(";")[0]:
+                                counter += 1
+                        if counter == 0:
+                            print("Заметок с таким id нет или id введен некорректно")
+                            file.close()
+                    idsearchprintall(id)
                 else:
                     counter = 0
                     with io.open('CSV/notes.csv', encoding='utf-8') as file:
@@ -120,13 +154,13 @@ def mainProg():
                     print("Следующая заметка будет отредактирована:\n")
                     findid(idtoedit)
                     newheader = input("Введите новый заголовок или не"
-                                        " вводите ничего, чтобы оставить без изменений: \n")
+                                      " вводите ничего, чтобы оставить без изменений: \n")
                     while ';' in newheader:
                         newheader = input("Символ ; недопустим, попробуйте еще раз: \n")
                     if newheader == "":
                         newheader = idsearchheader(idtoedit)
                     newbody = input("Введите новый текст заметки или не "
-                                     " вводите ничего, чтобы оставить без изменений: \n")
+                                    " вводите ничего, чтобы оставить без изменений: \n")
                     while ';' in newbody:
                         newbody = input("Символ ; недопустим, попробуйте еще раз: \n")
                     if newbody == "":
@@ -134,15 +168,15 @@ def mainProg():
                     idsearchdelete(idtoedit)
                     with open('CSV/notes.csv', 'a', encoding="utf-8") as csvfile:
                         csvfile.write("\n"
-                                                      + idtoedit + ";"
-                                                      + newheader + ";"
-                                                      + newbody + ";"
-                                                      + str(current_datetime) + "\n")
+                                      + idtoedit + ";"
+                                      + newheader + ";"
+                                      + newbody + ";"
+                                      + str(current_datetime) + "\n")
                         print("Заметка " + idtoedit
-                                              + " | " + newheader
-                                              + " | " + newbody
-                                              + " | " + str(current_datetime)
-                                              + " отредактирована")
+                              + " | " + newheader
+                              + " | " + newbody
+                              + " | " + str(current_datetime)
+                              + " отредактирована")
                         csvfile.close()
                         sortids()
                         mainProg()
