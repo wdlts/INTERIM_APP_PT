@@ -1,3 +1,3 @@
-from main_notes import mainProg
+from notes_main_code import mainProg
 
 mainProg()

@@ -2,11 +2,11 @@ import csv
 import io
 from datetime import datetime
 
-import idgeneration
-from findprintid import findid
-from idsearchedit import idsearchheader, idsearchbody
-from searchdeleteid import idsearchdelete
-from sortstrings import sortids
+from NOTES_APP.FUNCTIONS import idgeneration
+from NOTES_APP.FUNCTIONS.findprintid import findid
+from NOTES_APP.FUNCTIONS.idsearchedit import idsearchheader, idsearchbody
+from NOTES_APP.FUNCTIONS.searchdeleteid import idsearchdelete
+from NOTES_APP.FUNCTIONS.sortstrings import sortids
 
 csv.register_dialect('РАЗДЕЛИТЕЛЬ', delimiter=';', skipinitialspace=True)
 filecontent = []
@@ -51,7 +51,7 @@ def mainProg():
                             notes.append(str(
                                 idgeneration.newid()) + ';' + noteHeader + ';' + noteContent + ';' + str(
                                 current_datetime))
-                            with open('notes.csv', 'a', encoding="utf-8") as csvfile:
+                            with open('CSV/notes.csv', 'a', encoding="utf-8") as csvfile:
                                 csvfile.write("\n" + str(
                                     idgeneration.newid()) + ";" +
                                               noteHeader + ";" +
@@ -76,7 +76,7 @@ def mainProg():
                 elif texttosearchorcommand == "":
                     print("Вы ничего не ввели\n")
                 elif texttosearchorcommand == "all":
-                    with io.open('notes.csv', encoding='utf-8') as file:
+                    with io.open('CSV/notes.csv', encoding='utf-8') as file:
                         for line in file:
                             print((line.split(";"))[0]
                                   + " | " + (line.split(";"))[1]
@@ -85,7 +85,7 @@ def mainProg():
                         file.close()
                 else:
                     counter = 0
-                    with io.open('notes.csv', encoding='utf-8') as file:
+                    with io.open('CSV/notes.csv', encoding='utf-8') as file:
                         for line in file:
                             if texttosearchorcommand in line:
                                 print((line.split(";"))[0]
@@ -105,7 +105,7 @@ def mainProg():
                 if idtoedit == "0":
                     mainProg()
                 counter = 0
-                with io.open('notes.csv', encoding='utf-8') as file:
+                with io.open('CSV/notes.csv', encoding='utf-8') as file:
                     for line in file:
                         if idtoedit == line.split(';')[0]:
                             counter += 1
@@ -128,7 +128,7 @@ def mainProg():
                     if newbody == "":
                         newbody = idsearchbody(idtoedit)
                     idsearchdelete(idtoedit)
-                    with open('notes.csv', 'a', encoding="utf-8") as csvfile:
+                    with open('CSV/notes.csv', 'a', encoding="utf-8") as csvfile:
                         csvfile.write("\n"
                                                       + idtoedit + ";"
                                                       + newheader + ";"
@@ -150,7 +150,7 @@ def mainProg():
                 if idtodelete == "0":
                     mainProg()
                 counter = 0
-                with io.open('notes.csv', encoding='utf-8') as file:
+                with io.open('CSV/notes.csv', encoding='utf-8') as file:
                     for line in file:
                         if idtodelete == line.split(';')[0]:
                             counter += 1
