@@ -59,11 +59,11 @@ def mainProg():
                                               str(current_datetime))
                                 csvfile.close()
                             sortids()
-                            print("Заметка успешно сохранена")
+                            print("Заметка успешно сохранена\n")
                             print((str(notes).split(";"))[0]
                                   + " | " + (str(notes).split(";"))[1]
                                   + " | " + (str(notes).split(";"))[2]
-                                  + " | " + (str(notes).split(";"))[3])
+                                  + " | " + (str(notes).split(";"))[3]+"\n")
                             mainProg()
         elif command == "2":
             while True:
@@ -76,13 +76,18 @@ def mainProg():
                 elif texttosearchorcommand == "":
                     print("Вы ничего не ввели\n")
                 elif texttosearchorcommand == "all":
-                    with io.open('CSV/notes.csv', encoding='utf-8') as file:
-                        for line in file:
-                            print((line.split(";"))[0]
-                                  + " | " + (line.split(";"))[1]
-                                  + " | " + (line.split(";"))[2]
-                                  + " | " + (line.split(";"))[3])
-                        file.close()
+                    with io.open('CSV/notes.csv', 'r', encoding='utf-8') as file:
+                        if file.readlines() == []:
+                            print("Заметок нет")
+                            file.close()
+                        else:
+                            with io.open('CSV/notes.csv', 'r', encoding='utf-8') as file:
+                                for line in file:
+                                    print((line.split(";"))[0]
+                                              + " | " + (line.split(";"))[1]
+                                              + " | " + (line.split(";"))[2]
+                                              + " | " + (line.split(";"))[3])
+                                file.close()
                 else:
                     counter = 0
                     with io.open('CSV/notes.csv', encoding='utf-8') as file:

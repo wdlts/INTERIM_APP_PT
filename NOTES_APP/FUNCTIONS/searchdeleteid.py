@@ -3,9 +3,9 @@ import os
 
 def idsearchdelete(inputid):
 
-    INFILE = "notes.csv"
+    INFILE = './CSV/notes.csv'
     FIND = inputid
-    OUTFILE = "new_notes.csv"
+    OUTFILE = './CSV/new_notes.csv'
     ENC = "utf-8"
     with open(INFILE, 'r', encoding=ENC) as infile, open(OUTFILE, "w", encoding=ENC) as outfile:
         for line in infile:

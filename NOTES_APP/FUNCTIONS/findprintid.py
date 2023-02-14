@@ -1,6 +1,6 @@
 
 def findid(inputid):
-    INFILE = "notes.csv"
+    INFILE = './CSV/notes.csv'
     FIND = str(inputid) + ";"
     ENC = "utf-8"
     with open(INFILE, 'r', encoding=ENC) as infile:
