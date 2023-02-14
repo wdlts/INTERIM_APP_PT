@@ -1,8 +1,10 @@
 import csv
-from datetime import datetime
 import io
+from datetime import datetime
+
 import idgeneration
 from findprintid import findid
+from idsearchedit import idsearchheader, idsearchbody
 from searchdeleteid import idsearchdelete
 from sortstrings import sortids
 
@@ -11,13 +13,9 @@ filecontent = []
 notes = []
 current_datetime = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-
-# myFile = open('notes.csv', 'a', encoding='utf-8')
-
-
 def mainMenu():
     print("1. Создать заметку\n"
-          "2. Просмотреть заметку\n"
+          "2. Поиск по заметкам\n"
           "3. Редактировать заметку\n"
           "4. Удалить заметку\n"
           "5. Выход\n")
@@ -33,7 +31,7 @@ def mainProg():
                 print("Неверная команда, только цифры от 1 до 5")
                 mainProg()
         except ValueError:
-            print("Буквы недопустимы, повторите попытку")
+            print("Неверная команда, только цифры от 1 до 5")
             mainProg()
         if command == "1":
             while True:
@@ -44,7 +42,7 @@ def mainProg():
                     mainProg()
                 else:
                     while True:
-                        noteContent = input("Введите тело заметки или 0 для выхода в главное меню: ")
+                        noteContent = input("Введите заметку или 0 для выхода в главное меню: ")
                         if ";" in noteContent:
                             print("Символ ; не допускается попробуйте еще раз")
                         elif noteContent == "0":
@@ -62,40 +60,43 @@ def mainProg():
                                 csvfile.close()
                             sortids()
                             print("Заметка успешно сохранена")
-                            print((str(notes)
-                                   .split(";"))[0] + " | " + (str(notes)
-                                                              .split(";"))[1] + " | " + (str(notes)
-                                                                                         .split(";"))[2] + " | " +
-                                  (str(notes)
-                                   .split(";"))[3])
+                            print((str(notes).split(";"))[0]
+                                  + " | " + (str(notes).split(";"))[1]
+                                  + " | " + (str(notes).split(";"))[2]
+                                  + " | " + (str(notes).split(";"))[3])
                             mainProg()
         elif command == "2":
             while True:
                 print("\nВведите текст для поиска по всем заметкам или:\n"
                       "all - вывести все заметки\n"
                       "0 - вернуться в главное меню\n")
-                TTS = input()
-                if TTS == "0":
+                texttosearchorcommand = input()
+                if texttosearchorcommand == "0":
                     mainProg()
-                elif TTS == "":
+                elif texttosearchorcommand == "":
                     print("Вы ничего не ввели\n")
-                elif TTS == "all":
+                elif texttosearchorcommand == "all":
                     with io.open('notes.csv', encoding='utf-8') as file:
                         for line in file:
-                            print(line, end='')
+                            print((line.split(";"))[0]
+                                  + " | " + (line.split(";"))[1]
+                                  + " | " + (line.split(";"))[2]
+                                  + " | " + (line.split(";"))[3])
                         file.close()
                 else:
                     counter = 0
                     with io.open('notes.csv', encoding='utf-8') as file:
                         for line in file:
-                            if TTS in line:
-                                print(line, end='')
+                            if texttosearchorcommand in line:
+                                print((line.split(";"))[0]
+                                      + " | " + (line.split(";"))[1]
+                                      + " | " + (line.split(";"))[2]
+                                      + " | " + (line.split(";"))[3])
                                 counter += 1
                         file.close()
                     if counter == 0:
-                        print("Такой заметки нет\n")
+                        print("Такой заметки нет или команда введена неверно")
                     file.close()
-
         elif command == "3":
             while True:
                 print("Введите id заметки, которую нужно отредактировать:\n"
@@ -103,7 +104,6 @@ def mainProg():
                 idtoedit = input()
                 if idtoedit == "0":
                     mainProg()
-
                 counter = 0
                 with io.open('notes.csv', encoding='utf-8') as file:
                     for line in file:
@@ -111,30 +111,44 @@ def mainProg():
                             counter += 1
                     file.close()
                 if counter == 0:
-                    print("Такого id нет или он введен направильно, попробуйте еще раз\n")
-
+                    print("Такого id нет или он введен неправильно, попробуйте еще раз\n")
                 elif idtoedit.isdigit() and idtoedit != 0:
                     print("Следующая заметка будет отредактирована:\n")
                     findid(idtoedit)
-                    newheader = input("Введите новый заголовок: \n")
-                    newbody = input("Введите новый текст заметки: \n")
+                    newheader = input("Введите новый заголовок или не"
+                                        " вводите ничего, чтобы оставить без изменений: \n")
+                    while ';' in newheader:
+                        newheader = input("Символ ; недопустим, попробуйте еще раз: \n")
+                    if newheader == "":
+                        newheader = idsearchheader(idtoedit)
+                    newbody = input("Введите новый текст заметки или не "
+                                     " вводите ничего, чтобы оставить без изменений: \n")
+                    while ';' in newbody:
+                        newbody = input("Символ ; недопустим, попробуйте еще раз: \n")
+                    if newbody == "":
+                        newbody = idsearchbody(idtoedit)
                     idsearchdelete(idtoedit)
                     with open('notes.csv', 'a', encoding="utf-8") as csvfile:
-                        csvfile.write(
-                            "\n" + idtoedit + ";" + newheader + ";" + newbody + ";" + str(current_datetime) + "\n")
-                        print("Заметка " + idtoedit + " ## " + newheader + " ## " + newbody + " ## " + str(
-                            current_datetime) + " отредактирована")
-                    csvfile.close()
-                    sortids()
-
+                        csvfile.write("\n"
+                                                      + idtoedit + ";"
+                                                      + newheader + ";"
+                                                      + newbody + ";"
+                                                      + str(current_datetime) + "\n")
+                        print("Заметка " + idtoedit
+                                              + " | " + newheader
+                                              + " | " + newbody
+                                              + " | " + str(current_datetime)
+                                              + " отредактирована")
+                        csvfile.close()
+                        sortids()
+                        mainProg()
         elif command == "4":
             while True:
                 print("Введите id заметки, которую нужно удалить:\n"
                       "0 - выйти в главное меню\n")
                 idtodelete = input()
-                if idtodelete == "*":
+                if idtodelete == "0":
                     mainProg()
-
                 counter = 0
                 with io.open('notes.csv', encoding='utf-8') as file:
                     for line in file:
@@ -147,6 +161,5 @@ def mainProg():
                 elif idtodelete.isdigit() and idtodelete != 0:
                     idsearchdelete(idtodelete)
                     print("Заметка с id " + idtodelete + " удалена\n")
-
         elif command == "5":
             exit()

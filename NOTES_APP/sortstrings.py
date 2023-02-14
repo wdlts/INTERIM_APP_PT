@@ -1,9 +1,8 @@
-from natsort import natsorted, ns
+from natsort import natsorted
 
 
 def sortids():
     inFile = open('notes.csv', "r", encoding='utf-8')
-    # outFile = open("notes_temp.txt", "w", encoding="utf8")
     reader = inFile.readlines()
     scs = []
     for i in reader:

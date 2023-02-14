@@ -6,4 +6,7 @@ def findid(inputid):
     with open(INFILE, 'r', encoding=ENC) as infile:
         for line in infile:
             if FIND in line:
-                print(line)
+                print((line.split(";"))[0]
+                      + " | " + (line.split(";"))[1]
+                      + " | " + (line.split(";"))[2]
+                      + " | " + (line.split(";"))[3])
